@@ -1,8 +1,8 @@
 from os.path import join as path_join
 
-from django.conf import settings
 from django.urls import include, path
 
+from django_oidc_id_provider import settings
 from django_oidc_id_provider.views import fc_authorize, fc_callback
 
 urlpatterns = [

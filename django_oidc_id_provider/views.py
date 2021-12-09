@@ -1,6 +1,5 @@
 import logging
 
-from django.conf import settings
 from django.contrib import messages as django_messages
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
@@ -11,6 +10,7 @@ from jwt.api_jwt import ExpiredSignatureError
 import requests as python_request
 from secrets import token_urlsafe
 
+from django_oidc_id_provider import settings
 from django_oidc_id_provider.utils import get_connection_model
 
 logging.basicConfig(level=logging.INFO)
@@ -21,7 +21,9 @@ Connection = get_connection_model()
 
 
 def fc_authorize(request):
-    connection = Connection.objects.get(pk=request.session["connection"])
+    connection = Connection.objects.get(
+        pk=request.session[settings.FC_AS_FS_SESSION_KEY_SAVE]
+    )
 
     connection.state = token_urlsafe(16)
     connection.nonce = token_urlsafe(16)
@@ -41,7 +43,7 @@ def fc_authorize(request):
         "family_name",
         "birthcountry",
     ]
-    if settings.GET_PREFERRED_USERNAME_FROM_FC:
+    if settings.FC_AS_FS_GET_PREFERRED_USERNAME:
         fc_scopes.append("preferred_username")
 
     parameters = (
@@ -143,14 +145,6 @@ def fc_callback(request):
         log.info("408: FC connection has expired.")
         return render(request, "408.html", status=408)
 
-    usager, error = get_user_info(connection)
-    if error:
-        django_messages.error(request, error)
-        return redirect("espace_aidant_home")
-
-    connection.usager = usager
-    connection.save()
-
     logout_base = f"{fc_base}/logout"
     logout_id_token = f"id_token_hint={fc_id_token}"
     logout_state = f"state={state}"
@@ -160,4 +154,4 @@ def fc_callback(request):
 
 
 def get_user_info(connection: Connection) -> tuple:
-    pass
+    return ()

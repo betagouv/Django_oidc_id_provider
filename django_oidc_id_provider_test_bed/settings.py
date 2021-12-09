@@ -1,3 +1,4 @@
+import logging
 import os
 from distutils.util import strtobool
 from pathlib import Path
@@ -71,7 +72,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "django_oidc_id_provider_server.urls"
+ROOT_URLCONF = "django_oidc_id_provider_test_bed.urls"
 
 TEMPLATES = [
     {
@@ -89,7 +90,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "django_oidc_id_provider_server.wsgi.application"
+WSGI_APPLICATION = "django_oidc_id_provider_test_bed.wsgi.application"
 
 DATABASES = {
     "default": {
@@ -120,3 +121,10 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+FC_AS_FS_LOGGING_LEVEL = logging.INFO
+FC_AS_FS_BASE_URL = os.environ["FC_AS_FS_BASE_URL"]
+FC_AS_FS_ID = os.environ["FC_AS_FS_ID"]
+FC_AS_FS_SECRET = os.environ["FC_AS_FS_SECRET"]
+FC_AS_FS_CALLBACK_URL = os.environ["FC_AS_FS_CALLBACK_URL"]
+FC_CONNECTION_AGE = os.environ["FC_CONNECTION_AGE"]

@@ -1,2 +1,6 @@
 pre-commit==2.16.0
 black==21.12b0
+freezegun==1.1.0
+pytz==2021.3
+python-dotenv==0.19.2
+coverage==6.2
